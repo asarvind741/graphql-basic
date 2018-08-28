@@ -1,13 +1,24 @@
-var GraphQLSchema = require('graphql').GraphQLSchema;
-var GraphQLObjectType = require('graphql').GraphQLObjectType;
-var queryType = require('./queries/user').queryType;
-var mutation = require('./mutations/index');
+const {buildSchema} = require('graphql');
+const graphqlHTTP = require('express-graphql');
 
-exports.userSchema = new GraphQLSchema({
-  query: queryType,
-  mutation: new GraphQLObjectType({
-    name: 'Mutation',
-    fields: mutation
-  })
-})
+module.exports = (app) => {
 
+  const graphQLSchema = buildSchema(`
+type Query {
+  hello: String
+}`)
+
+  const root = {
+    hello: () => {
+      return 'Hello World';
+    },
+  };
+
+  app.use('/graphql', graphqlHTTP({
+    schema: graphQLSchema,
+    rootValue: root,
+    graphiql: true,
+  }));
+  app.listen(4000);
+  console.log('Running a GraphQL API server at localhost:4000/graphql');
+}

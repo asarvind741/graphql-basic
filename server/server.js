@@ -1,5 +1,5 @@
-const express = require("express");
-const mongoose = require('./config/mongoose');
+import express  from "express";
+import mongoose from './config/mongoose';
 const cors = require("cors");
 const db = mongoose();
 const app = express();
